@@ -18,13 +18,13 @@ internal class UserService : IUserService
     {
         ApplicationUser? user = await
         _userRepository.GetUserByEmailAndPassword(loginRequest.Email, loginRequest.Password);
-        if (user == null) 
+        if (user == null)
         {
             return null;
         }
         //return new AuthenticationResopnse(user.UserID, user.Email, user.PersonName, user.Gender, "token", Success: true);
         // Using AutoMapper to map ApplicationUser (user) to AuthenticationResopnse
-        return _mapper.Map<AuthenticationResopnse>(user) with { Success = true , Token = "token"};
+        return _mapper.Map<AuthenticationResopnse>(user) with { Success = true, Token = "token" };
     }
     public async Task<AuthenticationResopnse?> Register(RegisterRequest registerRequest)
     {
@@ -41,5 +41,14 @@ internal class UserService : IUserService
         //    registeredUser.UserID,  registeredUser.Email, registeredUser.PersonName, registeredUser.Gender, "token",  Success: true
         //);
         return _mapper.Map<AuthenticationResopnse>(registeredUser) with { Success = true, Token = "token" };
+    }
+    public async Task<UserDTO?> GetUserByUserID(Guid? userID)
+    {
+        ApplicationUser applicationUser = await _userRepository.GetUserByUserID(userID);
+        if (applicationUser == null)
+        {
+            return null;
+        }
+        return _mapper.Map<UserDTO>(applicationUser);
     }
 }
